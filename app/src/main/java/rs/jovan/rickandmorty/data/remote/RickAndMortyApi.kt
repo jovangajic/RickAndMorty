@@ -4,6 +4,7 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
 import rs.jovan.rickandmorty.data.remote.dto.CharacterDto
+import rs.jovan.rickandmorty.data.remote.dto.CharacterResponseDto
 
 interface RickAndMortyApi {
 
@@ -11,7 +12,7 @@ interface RickAndMortyApi {
     suspend fun getCharacters(
         @Query("page")page: Int,
         @Query("name")name: String?
-    ): List<CharacterDto>
+    ): CharacterResponseDto
 
 
     @GET("character/{id}")

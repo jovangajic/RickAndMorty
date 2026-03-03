@@ -9,6 +9,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import rs.jovan.rickandmorty.data.local.AppDatabase
 import rs.jovan.rickandmorty.data.local.dao.CharacterDao
+import rs.jovan.rickandmorty.data.local.dao.RemoteKeysDao
 import javax.inject.Singleton
 
 @Module
@@ -27,5 +28,10 @@ object RoomModule {
     @Provides
     fun provideCharacterDao(database: AppDatabase): CharacterDao {
         return database.characterDao()
+    }
+
+    @Provides
+    fun provideRemoteKeysDao(database: AppDatabase): RemoteKeysDao {
+        return database.remoteKeyDao()
     }
 }
