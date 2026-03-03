@@ -1,4 +1,4 @@
-package rs.jovan.rickandmorty.ui.theme
+package rs.jovan.rickandmorty.presentation.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
