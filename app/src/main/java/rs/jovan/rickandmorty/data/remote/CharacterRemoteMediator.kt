@@ -6,6 +6,8 @@ import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import androidx.room.withTransaction
 import kotlinx.coroutines.CancellationException
+import retrofit2.HttpException
+import java.io.IOException
 import rs.jovan.rickandmorty.data.local.AppDatabase
 import rs.jovan.rickandmorty.data.local.entity.CharacterEntity
 import rs.jovan.rickandmorty.data.local.entity.RemoteKeysEntity
@@ -83,7 +85,12 @@ class CharacterRemoteMediator(
 
         } catch (e: CancellationException) {
             throw e
-        } catch (e: Exception) {
+        } catch (e: HttpException) {
+            if (e.code() == 404) {
+                return MediatorResult.Success(endOfPaginationReached = true)
+            }
+            return MediatorResult.Error(e)
+        } catch (e: IOException) {
             return MediatorResult.Error(e)
         }
     }
