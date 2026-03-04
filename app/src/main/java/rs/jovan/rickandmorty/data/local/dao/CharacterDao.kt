@@ -39,4 +39,7 @@ interface CharacterDao {
     @Query("UPDATE characters SET isFavorite = NOT isFavorite WHERE id = :id")
     suspend fun toggleFavorite(id: Int)
 
+    @Query("UPDATE characters SET locationImageUrl = :url WHERE id = :id")
+    suspend fun updateLocationImageUrl(id: Int, url: String)
+
 }

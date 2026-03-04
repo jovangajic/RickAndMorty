@@ -12,7 +12,7 @@ import rs.jovan.rickandmorty.data.local.entity.RemoteKeysEntity
         CharacterEntity::class,
         RemoteKeysEntity::class
     ],
-    version = 1,
+    version = 4,
     exportSchema = false
 )
 abstract class AppDatabase: RoomDatabase() {

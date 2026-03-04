@@ -7,5 +7,8 @@ data class Character(
     val species: String,
     val gender: String,
     val image: String,
+    val locationName: String,
+    val locationUrl: String,
+    val locationImageUrl: String?,
     val isFavorite: Boolean
 )

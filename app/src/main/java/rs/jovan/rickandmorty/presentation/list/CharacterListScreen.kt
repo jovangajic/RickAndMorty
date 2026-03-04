@@ -22,16 +22,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.paging.PagingData
-import androidx.paging.compose.LazyPagingItems
-import androidx.paging.compose.collectAsLazyPagingItems
-import androidx.paging.compose.itemKey
-import kotlinx.coroutines.flow.flowOf
-import rs.jovan.rickandmorty.domain.model.Character
-import rs.jovan.rickandmorty.presentation.theme.RickAndMortyTheme
 import androidx.paging.LoadState
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.itemKey
+import rs.jovan.rickandmorty.domain.model.Character
 
 @Composable
 fun CharacterListScreen(
@@ -103,24 +98,3 @@ fun CharacterListScreen(
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-private fun CharacterListScreenPreview() {
-    val fakeCharacters = listOf(
-        Character(1, "Rick Sanchez", "Alive", "Human", "Male", "", false),
-        Character(2, "Morty Smith", "Alive", "Human", "Male", "", false),
-        Character(3, "Summer Smith", "Alive", "Human", "Female", "", false),
-        Character(4, "Beth Smith", "Alive", "Human", "Female", "", false),
-        Character(5, "Jerry Smith", "Alive", "Human", "Male", "", false),
-    )
-    val characters = flowOf(PagingData.from(fakeCharacters)).collectAsLazyPagingItems()
-
-    RickAndMortyTheme {
-        CharacterListScreen(
-            characters = characters,
-            onCharacterClicked = { },
-            onSearchQueryChanged = { },
-            showError = { }
-        )
-    }
-}

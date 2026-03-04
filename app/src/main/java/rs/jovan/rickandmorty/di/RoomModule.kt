@@ -22,7 +22,8 @@ object RoomModule {
             context,
             AppDatabase::class.java,
             "rick-morty.db"
-        ).build()
+        ).fallbackToDestructiveMigration(true)
+            .build()
     }
 
     @Provides
