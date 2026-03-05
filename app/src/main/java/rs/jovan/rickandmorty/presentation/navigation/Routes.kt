@@ -10,4 +10,7 @@ sealed interface Routes {
 
     @Serializable
     data class CharacterDetails(val id: Int): Routes
+
+    @Serializable
+    object Favorites : Routes
 }

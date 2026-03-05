@@ -20,6 +20,9 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import rs.jovan.rickandmorty.presentation.detail.CharacterDetailEvent
 import rs.jovan.rickandmorty.presentation.detail.CharacterDetailScreen
 import rs.jovan.rickandmorty.presentation.detail.CharacterDetailViewModel
+import rs.jovan.rickandmorty.presentation.favorites.FavoritesEvent
+import rs.jovan.rickandmorty.presentation.favorites.FavoritesScreen
+import rs.jovan.rickandmorty.presentation.favorites.FavoritesViewModel
 import rs.jovan.rickandmorty.presentation.list.CharacterListEvent
 import rs.jovan.rickandmorty.presentation.list.CharacterListScreen
 import rs.jovan.rickandmorty.presentation.list.CharacterListViewModel
@@ -30,32 +33,53 @@ fun NavGraph(navController: NavHostController) {
         navController = navController,
         startDestination = Routes.CharacterList
     ) {
-       composable<Routes.CharacterList> {
-           val vm: CharacterListViewModel = hiltViewModel()
-           val characters = vm.characters.collectAsLazyPagingItems()
+        composable<Routes.CharacterList> {
+            val vm: CharacterListViewModel = hiltViewModel()
+            val characters = vm.characters.collectAsLazyPagingItems()
 
-           val snackbarHostState = remember { SnackbarHostState() }
-           LaunchedEffect(Unit) {
-               vm.events.collect { event ->
-                   when(event) {
-                       is CharacterListEvent.NavigateToDetails -> {
-                           navController.navigate(Routes.CharacterDetails(id = event.id))
-                       }
-                       is CharacterListEvent.ShowError -> {
-                           snackbarHostState.showSnackbar(event.msg)
-                       }
-                   }
-               }
-           }
+            val snackbarHostState = remember { SnackbarHostState() }
+            LaunchedEffect(Unit) {
+                vm.events.collect { event ->
+                    when (event) {
+                        is CharacterListEvent.NavigateToDetails -> {
+                            navController.navigate(Routes.CharacterDetails(id = event.id))
+                        }
+                        is CharacterListEvent.ShowError -> {
+                            snackbarHostState.showSnackbar(event.msg)
+                        }
+                    }
+                }
+            }
 
-           CharacterListScreen(
-               characters = characters,
-               onCharacterClicked = vm::onCharacterClicked,
-               onSearchQueryChanged = vm::onSearchQueryChanged,
-               showError = vm::onError
-           )
+            CharacterListScreen(
+                characters = characters,
+                onCharacterClicked = vm::onCharacterClicked,
+                onSearchQueryChanged = vm::onSearchQueryChanged,
+                showError = vm::onError,
+                onFavoritesClicked = { navController.navigate(Routes.Favorites) }
+            )
+        }
 
-       }
+        composable<Routes.Favorites> {
+            val vm: FavoritesViewModel = hiltViewModel()
+            val uiState by vm.uiState.collectAsStateWithLifecycle()
+
+            LaunchedEffect(Unit) {
+                vm.events.collect { event ->
+                    when (event) {
+                        is FavoritesEvent.NavigateToDetails -> navController.navigate(Routes.CharacterDetails(id = event.id))
+                        is FavoritesEvent.NavigateBack -> navController.navigateUp()
+                    }
+                }
+            }
+
+            FavoritesScreen(
+                uiState = uiState,
+                onCharacterClicked = vm::onCharacterClicked,
+                onSearchQueryChanged = vm::onSearchQueryChanged,
+                onBack = vm::onBack
+            )
+        }
 
         composable<Routes.CharacterDetails> {
             val vm: CharacterDetailViewModel = hiltViewModel()

@@ -65,6 +65,10 @@ class CharacterRepositoryImpl @Inject constructor(
         dao.updateLocationImageUrl(characterId, imageUrl)
     }
 
+    override fun getFavorites(query: String?): Flow<List<Character>> {
+        return dao.getFavorites(query).map { list -> list.map { it.toDomain() } }
+    }
+
     override suspend fun toggleFavorite(id: Int) {
         dao.toggleFavorite(id)
     }

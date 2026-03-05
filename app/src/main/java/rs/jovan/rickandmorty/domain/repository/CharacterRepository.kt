@@ -9,5 +9,6 @@ interface CharacterRepository {
     suspend fun getCharacters(query: String? = null): Flow<PagingData<Character>>
     suspend fun getCharacterDetails(id: Int): Flow<Character?>
     suspend fun fetchAndCacheLocationImageUrl(characterId: Int, locationUrl: String)
+    fun getFavorites(query: String? = null): Flow<List<Character>>
     suspend fun toggleFavorite(id: Int)
 }

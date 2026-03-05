@@ -9,11 +9,14 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -33,11 +36,21 @@ fun CharacterListScreen(
     characters: LazyPagingItems<Character>,
     onCharacterClicked: (Int) -> Unit,
     onSearchQueryChanged: (String?) -> Unit,
-    showError: (String) -> Unit
+    showError: (String) -> Unit,
+    onFavoritesClicked: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     var query by remember { mutableStateOf("") }
 
-    Column(modifier = Modifier.fillMaxSize()) {
+    Scaffold(
+        floatingActionButton = {
+            FloatingActionButton(onClick = onFavoritesClicked) {
+                Icon(Icons.Default.Favorite, contentDescription = "Favorites")
+            }
+        },
+        modifier = modifier
+    ) { innerPadding ->
+    Column(modifier = Modifier.fillMaxSize().padding(innerPadding)) {
         OutlinedTextField(
             value = query,
             onValueChange = {
@@ -95,6 +108,7 @@ fun CharacterListScreen(
                 }
             }
         }
+    }
     }
 }
 
