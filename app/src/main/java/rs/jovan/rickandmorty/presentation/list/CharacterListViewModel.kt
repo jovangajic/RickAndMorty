@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
 import rs.jovan.rickandmorty.domain.repository.CharacterRepository
@@ -25,6 +26,7 @@ class CharacterListViewModel @Inject constructor(
     @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
     val characters = searchQuery
         .debounce { if (it.isNullOrBlank()) 0L else 500L }
+        .distinctUntilChanged()
         .flatMapLatest { repository.getCharacters(it) }
         .cachedIn(viewModelScope)
 
