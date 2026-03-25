@@ -53,6 +53,7 @@ fun NavGraph(navController: NavHostController) {
 
             CharacterListScreen(
                 characters = characters,
+                snackbarHostState = snackbarHostState,
                 onCharacterClicked = vm::onCharacterClicked,
                 onSearchQueryChanged = vm::onSearchQueryChanged,
                 showError = vm::onError,

@@ -42,6 +42,9 @@ interface CharacterDao {
     @Query("UPDATE characters SET locationImageUrl = :url WHERE id = :id")
     suspend fun updateLocationImageUrl(id: Int, url: String)
 
+    @Query("SELECT id FROM characters WHERE isFavorite = 1")
+    suspend fun getFavoriteIds(): List<Int>
+
     @Query("SELECT * FROM characters WHERE isFavorite = 1 AND (:query IS NULL OR name LIKE '%' || :query || '%') ORDER BY name ASC")
     fun getFavorites(query: String? = null): Flow<List<CharacterEntity>>
 

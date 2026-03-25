@@ -15,8 +15,12 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Snackbar
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -34,6 +38,7 @@ import rs.jovan.rickandmorty.domain.model.Character
 @Composable
 fun CharacterListScreen(
     characters: LazyPagingItems<Character>,
+    snackbarHostState: SnackbarHostState,
     onCharacterClicked: (Int) -> Unit,
     onSearchQueryChanged: (String?) -> Unit,
     showError: (String) -> Unit,
@@ -46,6 +51,15 @@ fun CharacterListScreen(
         floatingActionButton = {
             FloatingActionButton(onClick = onFavoritesClicked) {
                 Icon(Icons.Default.Favorite, contentDescription = "Favorites")
+            }
+        },
+        snackbarHost = {
+            SnackbarHost(hostState = snackbarHostState) {
+                Snackbar(
+                    snackbarData = it,
+                    containerColor = MaterialTheme.colorScheme.errorContainer,
+                    contentColor = MaterialTheme.colorScheme.onErrorContainer
+                )
             }
         },
         modifier = modifier

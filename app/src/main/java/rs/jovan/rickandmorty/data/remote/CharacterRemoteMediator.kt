@@ -64,7 +64,15 @@ class CharacterRemoteMediator(
                     remoteKeysDao.clearRemoteKeysForQuery(queryTag)
                 }
 
-                val entities = response.results.map { it.toEntity() }
+                val favoriteIds = if (loadType == LoadType.REFRESH) {
+                    dao.getFavoriteIds().toSet()
+                } else {
+                    emptySet()
+                }
+
+                val entities = response.results.map { dto ->
+                    dto.toEntity().copy(isFavorite = dto.id in favoriteIds)
+                }
                 dao.insertAll(entities)
 
                 val keys = entities.map {

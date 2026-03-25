@@ -7,6 +7,8 @@ import androidx.paging.PagingData
 import androidx.paging.map
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import rs.jovan.rickandmorty.data.local.AppDatabase
 import rs.jovan.rickandmorty.data.local.dao.CharacterDao
 import rs.jovan.rickandmorty.data.mapper.toDomain
@@ -22,8 +24,13 @@ class CharacterRepositoryImpl @Inject constructor(
     private val dao: CharacterDao,
     private val database: AppDatabase
 ): CharacterRepository {
+
+    // Prevents two coroutines from simultaneously checking "is character cached?"
+    // and both deciding to fetch from the API.
+    private val detailFetchMutex = Mutex()
+
     @OptIn(ExperimentalPagingApi::class)
-    override suspend fun getCharacters(query: String?): Flow<PagingData<Character>> {
+    override fun getCharacters(query: String?): Flow<PagingData<Character>> {
         return Pager(
             config = PagingConfig(
                 pageSize = 20,
@@ -45,12 +52,14 @@ class CharacterRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getCharacterDetails(id: Int): Flow<Character?> {
-        if (dao.getCharacterOnce(id) == null) {
-            try {
-                val dto = api.getCharacter(id)
-                dao.insertAll(listOf(dto.toEntity()))
-            } catch (e: Exception) {
-                // Room will emit null, ViewModel will handle as error
+        detailFetchMutex.withLock {
+            if (dao.getCharacterOnce(id) == null) {
+                try {
+                    val dto = api.getCharacter(id)
+                    dao.insertAll(listOf(dto.toEntity()))
+                } catch (e: Exception) {
+                    // Room will emit null, ViewModel will handle as error
+                }
             }
         }
         return dao.getCharacter(id).map { it?.toDomain() }

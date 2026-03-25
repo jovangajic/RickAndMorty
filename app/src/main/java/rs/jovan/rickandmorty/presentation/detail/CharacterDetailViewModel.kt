@@ -27,6 +27,8 @@ class CharacterDetailViewModel @Inject constructor(
     private val _events = MutableSharedFlow<CharacterDetailEvent>(extraBufferCapacity = 1)
     val events = _events.asSharedFlow()
 
+    private var locationFetchInitiated = false
+
     init {
         viewModelScope.launch {
             try {
@@ -39,7 +41,11 @@ class CharacterDetailViewModel @Inject constructor(
                     .collect { character ->
                         if (character != null) {
                             _uiState.value = CharacterDetailUiState.Success(character)
-                            if (character.locationImageUrl == null && character.locationUrl.isNotBlank()) {
+                            if (character.locationImageUrl == null
+                                && character.locationUrl.isNotBlank()
+                                && !locationFetchInitiated
+                            ) {
+                                locationFetchInitiated = true
                                 launch {
                                     try {
                                         repository.fetchAndCacheLocationImageUrl(characterId, character.locationUrl)
