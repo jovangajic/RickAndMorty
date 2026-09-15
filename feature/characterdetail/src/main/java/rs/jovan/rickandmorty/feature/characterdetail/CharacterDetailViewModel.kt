@@ -19,7 +19,6 @@ class CharacterDetailViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    // Matches CharacterDetailRoute.id
     private val characterId: Int = checkNotNull(savedStateHandle["id"])
 
     private val _uiState = MutableStateFlow<CharacterDetailUiState>(CharacterDetailUiState.Loading)

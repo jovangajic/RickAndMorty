@@ -25,10 +25,6 @@ class CharacterListViewModel @Inject constructor(
     private val repository: CharacterRepository
 ): ViewModel() {
 
-    // Single source of truth for the search field, so the text survives navigating
-    // to details and back and always matches the filtered list. Kept as synchronous
-    // Compose state (not a StateFlow) so the TextField never renders a stale value
-    // and drops keystrokes or IME composition.
     var searchQuery by mutableStateOf("")
         private set
 

@@ -10,10 +10,6 @@ import rs.jovan.rickandmorty.feature.characterlist.navigation.characterListScree
 import rs.jovan.rickandmorty.feature.favorites.navigation.favoritesScreen
 import rs.jovan.rickandmorty.feature.favorites.navigation.navigateToFavorites
 
-/**
- * The only place that knows about every feature. Features expose a NavGraphBuilder entry
- * and navigation callbacks; the app decides where those callbacks lead.
- */
 @Composable
 fun NavGraph(navController: NavHostController) {
     NavHost(

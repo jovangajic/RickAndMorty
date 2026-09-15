@@ -3,6 +3,5 @@ plugins {
 }
 
 dependencies {
-    // PagingData + Flow are part of the repository contract
     api(libs.paging.common)
 }

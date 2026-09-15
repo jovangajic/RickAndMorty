@@ -73,7 +73,6 @@ room-paging = { group = "androidx.room", name = "room-paging", version.ref = "ro
 coil-compose = { group = "io.coil-kt.coil3", name = "coil-compose", version.ref = "coil" }
 coil-network-okhttp = { group = "io.coil-kt.coil3", name = "coil-network-okhttp", version.ref = "coil" }
 
-# Dependencies of the build-logic convention plugins
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "agp" }
 kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
 
@@ -87,7 +86,6 @@ hilt-android = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 
-# Convention plugins defined in build-logic
 rickandmorty-android-library = { id = "rickandmorty.android.library" }
 rickandmorty-android-library-compose = { id = "rickandmorty.android.library.compose" }
 rickandmorty-android-feature = { id = "rickandmorty.android.feature" }

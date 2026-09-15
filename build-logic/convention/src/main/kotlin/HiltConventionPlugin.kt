@@ -6,7 +6,6 @@ class HiltConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         with(target) {
             pluginManager.apply("com.google.devtools.ksp")
-            // The Hilt Gradle plugin needs an Android plugin to already be applied
             pluginManager.withPlugin("com.android.base") {
                 pluginManager.apply("com.google.dagger.hilt.android")
             }

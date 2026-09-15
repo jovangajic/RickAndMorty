@@ -65,7 +65,7 @@ dependencies {
     // Navigation
     implementation(libs.androidx.navigation.compose)
 
-    // Coil network fetcher (registered at runtime, used by feature modules)
+    // Coil
     implementation(libs.coil.network.okhttp)
 
     testImplementation(libs.junit)
