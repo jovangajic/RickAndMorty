@@ -1,0 +1,13 @@
+plugins {
+    alias(libs.plugins.rickandmorty.android.feature)
+}
+
+android {
+    namespace = "rs.jovan.rickandmorty.feature.characterdetail"
+}
+
+dependencies {
+    implementation(libs.coil.compose)
+
+    testImplementation(libs.mockk)
+}

@@ -4,7 +4,6 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.hilt.android)
     alias(libs.plugins.ksp)
-    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -45,6 +44,12 @@ android {
 }
 
 dependencies {
+    implementation(project(":core:data"))
+    implementation(project(":core:ui"))
+    implementation(project(":feature:characterlist"))
+    implementation(project(":feature:favorites"))
+    implementation(project(":feature:characterdetail"))
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -57,33 +62,10 @@ dependencies {
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
 
-    // Room
-    implementation(libs.room.runtime)
-    implementation(libs.room.ktx)
-    implementation(libs.room.paging)
-    ksp(libs.room.compiler)
-    implementation(libs.hilt.navigation.compose)
-
-    // Retrofit + OkHttp + Moshi
-    implementation(libs.retrofit)
-    implementation(libs.retrofit.converter.moshi)
-    implementation(libs.okhttp)
-    implementation(libs.okhttp.logging.interceptor)
-    implementation(libs.moshi.kotlin)
-    ksp(libs.moshi.kotlin.codegen)
-
     // Navigation
     implementation(libs.androidx.navigation.compose)
 
-    // Kotlin Serialization
-    implementation(libs.kotlinx.serialization.json)
-
-    // Paging 3
-    implementation(libs.paging.runtime.ktx)
-    implementation(libs.paging.compose)
-
     // Coil
-    implementation(libs.coil.compose)
     implementation(libs.coil.network.okhttp)
 
     testImplementation(libs.junit)

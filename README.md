@@ -14,6 +14,23 @@ A floating action button on the list screen takes you to a dedicated favorites s
 
 The app follows a clean architecture split across three layers — data, domain, and presentation — with a unidirectional data flow in the UI layer using ViewModels, StateFlow for UI state, and SharedFlow for one-shot events like navigation and error messages.
 
+### Modules
+
+The project is modularized by feature:
+
+```
+:app                      Application, MainActivity, NavGraph wiring features together
+:feature:characterlist    Paginated, searchable character list
+:feature:favorites        Favorites list with local search
+:feature:characterdetail  Character details and favorite toggle
+:core:domain              Character model + CharacterRepository interface (pure Kotlin)
+:core:data                Room, Retrofit, RemoteMediator, repository implementation, Hilt modules
+:core:ui                  Theme and shared composables (CharacterItem)
+build-logic               Convention plugins shared by all library modules
+```
+
+Feature modules depend only on `:core:domain` and `:core:ui` — never on each other or on `:core:data`. Each feature exposes a type-safe route and a `NavGraphBuilder` extension with navigation callbacks, and `:app` decides where those callbacks lead. `:app` is the only module that depends on `:core:data`, which is what puts the repository binding into the Hilt graph.
+
 **Networking** is handled by Retrofit with a Moshi converter. OkHttp sits underneath with a logging interceptor attached for debugging.
 
 **Local storage** uses Room. Characters are cached in a single table after being fetched from the network. The favorites flag lives on the same entity, so toggling a favorite is just a local update that Room propagates reactively through a Flow.
