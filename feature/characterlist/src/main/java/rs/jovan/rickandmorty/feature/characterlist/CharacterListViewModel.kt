@@ -1,5 +1,9 @@
 package rs.jovan.rickandmorty.feature.characterlist
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
@@ -7,9 +11,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
@@ -24,12 +26,14 @@ class CharacterListViewModel @Inject constructor(
 ): ViewModel() {
 
     // Single source of truth for the search field, so the text survives navigating
-    // to details and back and always matches the filtered list.
-    private val _searchQuery = MutableStateFlow("")
-    val searchQuery = _searchQuery.asStateFlow()
+    // to details and back and always matches the filtered list. Kept as synchronous
+    // Compose state (not a StateFlow) so the TextField never renders a stale value
+    // and drops keystrokes or IME composition.
+    var searchQuery by mutableStateOf("")
+        private set
 
     @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
-    val characters = _searchQuery
+    val characters = snapshotFlow { searchQuery }
         .map { it.ifBlank { null } }
         .debounce { if (it.isNullOrBlank()) 0L else 500L }
         .distinctUntilChanged()
@@ -43,7 +47,7 @@ class CharacterListViewModel @Inject constructor(
     val events = _events.asSharedFlow()
 
     fun onSearchQueryChanged(query: String) {
-        _searchQuery.value = query
+        searchQuery = query
     }
 
     fun onCharacterClicked(id: Int) {
