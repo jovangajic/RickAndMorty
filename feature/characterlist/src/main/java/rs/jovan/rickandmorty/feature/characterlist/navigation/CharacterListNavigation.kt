@@ -2,8 +2,10 @@ package rs.jovan.rickandmorty.feature.characterlist.navigation
 
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -22,6 +24,7 @@ fun NavGraphBuilder.characterListScreen(
     composable<CharacterListRoute> {
         val vm: CharacterListViewModel = hiltViewModel()
         val characters = vm.characters.collectAsLazyPagingItems()
+        val query by vm.searchQuery.collectAsStateWithLifecycle()
 
         val snackbarHostState = remember { SnackbarHostState() }
         LaunchedEffect(Unit) {
@@ -35,6 +38,7 @@ fun NavGraphBuilder.characterListScreen(
 
         CharacterListScreen(
             characters = characters,
+            query = query,
             snackbarHostState = snackbarHostState,
             onCharacterClicked = vm::onCharacterClicked,
             onSearchQueryChanged = vm::onSearchQueryChanged,

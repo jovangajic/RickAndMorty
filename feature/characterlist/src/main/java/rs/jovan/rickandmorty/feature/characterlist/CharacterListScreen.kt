@@ -23,10 +23,6 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -39,15 +35,14 @@ import rs.jovan.rickandmorty.core.ui.CharacterItem
 @Composable
 fun CharacterListScreen(
     characters: LazyPagingItems<Character>,
+    query: String,
     snackbarHostState: SnackbarHostState,
     onCharacterClicked: (Int) -> Unit,
-    onSearchQueryChanged: (String?) -> Unit,
+    onSearchQueryChanged: (String) -> Unit,
     showError: (String) -> Unit,
     onFavoritesClicked: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    var query by remember { mutableStateOf("") }
-
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(onClick = onFavoritesClicked) {
@@ -68,10 +63,7 @@ fun CharacterListScreen(
     Column(modifier = Modifier.fillMaxSize().padding(innerPadding)) {
         OutlinedTextField(
             value = query,
-            onValueChange = {
-                query = it
-                onSearchQueryChanged(it.ifBlank { null })
-            },
+            onValueChange = onSearchQueryChanged,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp, vertical = 8.dp),
@@ -79,10 +71,7 @@ fun CharacterListScreen(
             leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
             trailingIcon = {
                 if (query.isNotEmpty()) {
-                    IconButton(onClick = {
-                        query = ""
-                        onSearchQueryChanged(null)
-                    }) {
+                    IconButton(onClick = { onSearchQueryChanged("") }) {
                         Icon(Icons.Default.Close, contentDescription = "Clear search")
                     }
                 }

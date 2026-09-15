@@ -9,9 +9,11 @@ import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import rs.jovan.rickandmorty.core.domain.repository.CharacterRepository
 import javax.inject.Inject
@@ -21,10 +23,14 @@ class CharacterListViewModel @Inject constructor(
     private val repository: CharacterRepository
 ): ViewModel() {
 
-    private val searchQuery = MutableStateFlow<String?>(null)
+    // Single source of truth for the search field, so the text survives navigating
+    // to details and back and always matches the filtered list.
+    private val _searchQuery = MutableStateFlow("")
+    val searchQuery = _searchQuery.asStateFlow()
 
     @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
-    val characters = searchQuery
+    val characters = _searchQuery
+        .map { it.ifBlank { null } }
         .debounce { if (it.isNullOrBlank()) 0L else 500L }
         .distinctUntilChanged()
         .flatMapLatest { repository.getCharacters(it) }
@@ -36,8 +42,8 @@ class CharacterListViewModel @Inject constructor(
     )
     val events = _events.asSharedFlow()
 
-    fun onSearchQueryChanged(query: String?) {
-        searchQuery.value = query
+    fun onSearchQueryChanged(query: String) {
+        _searchQuery.value = query
     }
 
     fun onCharacterClicked(id: Int) {
